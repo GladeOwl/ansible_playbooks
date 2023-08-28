@@ -1,6 +1,9 @@
 - name: Setup sudo
   hosts: servers
   become: true
+  vars:
+    users: # Add future sudo users to this list
+      - glade
   tasks:
     - name: Install sudo
       apt:
@@ -22,8 +25,30 @@
 
     - name: Add sudoers users to devs group
       user:
-        name: glade
+        name: "{{ item }}"
         groups: devs
         append: true
         state: present
         createhome: true
+      with_items: "{{ users }}"
+
+- name: Setup Git
+  hosts: servers
+  become: true
+  tasks:
+    - name: Install Git
+      apt:
+        name: git
+        state: present
+
+    - name: Setup git user
+      community.general.git_config:
+        name: user.name
+        scope: global
+        value: glade
+
+    - name: Setup git email
+      community.general.git_config:
+        name: user.email
+        scope: global
+        value: owloftheglade@gmail.com
