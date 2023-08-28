@@ -1,0 +1,29 @@
+- name: Setup sudo
+  hosts: servers
+  become: true
+  tasks:
+    - name: Install sudo
+      apt:
+        name: sudo
+        state: present
+
+    - name: Ensure 'devs' group exists
+      group:
+        name: devs
+        state: present
+
+    - name: Add group 'devs' to sudoers
+      lineinfile:
+        dest: /etc/sudoers
+        state: present
+        regexp: "^%devs"
+        line: "%devs ALL=(ALL:ALL) ALL "
+        validate: "visudo -cf %s"
+
+    - name: Add sudoers users to devs group
+      user:
+        name: glade
+        groups: devs
+        append: true
+        state: present
+        createhome: true
