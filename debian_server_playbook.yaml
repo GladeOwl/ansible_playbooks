@@ -138,7 +138,7 @@
           auto br0
           iface br0 inet dhcp
                   bridge_ports {{ ansible_default_ipv4.interface }}
-#                  address {{ ansible_default_ipv4.address }}
+#                  address 192.168.1.80
 #                  netmask 255.255.255.0
 #                  network {{ ansible_default_ipv4.gateway }}
 #                  broadcast {{ ansible_default_ipv4.gateway }}
@@ -147,6 +147,7 @@
 #                  bridge_fd 0
 #                  bridge_maxwait 0
 #                  dns-nameservers 8.8.8.8 4.4.2.2
+        backup: true
 
     - name: Restart Network Manager
       ansible.builtin.systemd:
